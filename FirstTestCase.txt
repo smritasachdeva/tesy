@@ -1,0 +1,38 @@
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# Set up the Selenium webdriver (adjust based on your browser choice and installation)
+driver = webdriver.Chrome()
+
+# Open the webpage
+driver.get("https://example.com")  # Replace with your webpage URL
+
+# Find the textbox element (modify the locator strategy and value accordingly)
+textbox = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "textbox_id")))
+
+# Get the size and location of the textbox
+textbox_size = textbox.size
+textbox_location = textbox.location
+
+# Get the size and location of the UI (e.g., parent container)
+ui_element = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "ui_element_id")))
+ui_element_size = ui_element.size
+ui_element_location = ui_element.location
+
+# Compare the textbox size and location with the UI element size and location
+is_visible = (
+    textbox_location['x'] >= ui_element_location['x'] and
+    textbox_location['y'] >= ui_element_location['y'] and
+    textbox_location['x'] + textbox_size['width'] <= ui_element_location['x'] + ui_element_size['width'] and
+    textbox_location['y'] + textbox_size['height'] <= ui_element_location['y'] + ui_element_size['height']
+)
+
+if is_visible:
+    print("Textbox is properly visible and in proportion with the UI.")
+else:
+    print("Textbox is not properly visible or not in proportion with the UI.")
+
+# Close the browser
+driver.quit()
